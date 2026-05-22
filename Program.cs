@@ -1,4 +1,5 @@
 using EscolaAPI.Data;
+using EscolaAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -15,7 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Chave JWT a partir da configuração
-var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtKey = builder.Configuration["Jwt:Key"]
+    ?? throw new InvalidOperationException("JWT key is not configured.");
 var key = Encoding.UTF8.GetBytes(jwtKey);
 // Configuração da autenticação JWT
 builder.Services.AddAuthentication(options =>
