@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -25,8 +26,9 @@ namespace EscolaAPI.Controllers
             if (login.Username == "admin" && login.Password == "123456")
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.UTF8.GetBytes(
-                    _configuration["Jwt:Key"]);
+                var jwtKey = _configuration["Jwt:Key"]
+                    ?? throw new InvalidOperationException("JWT key is not configured.");
+                var key = Encoding.UTF8.GetBytes(jwtKey);
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {

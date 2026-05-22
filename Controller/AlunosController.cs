@@ -47,13 +47,23 @@ namespace EscolaAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAluno(int id, Aluno aluno)
         {
-            if (id != aluno.Id)
+            if (aluno.Id != 0 && id != aluno.Id)
                 return BadRequest();
 
+            var exists = await _context.Alunos.AnyAsync(a => a.Id == id);
+            if (!exists)
+                return NotFound();
+
+            aluno.Id = id;
             _context.Entry(aluno).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(new
+            {
+                success = true,
+                message = "Aluno atualizado com sucesso.",
+                aluno
+            });
         }
 
         [HttpDelete("{id}")]
@@ -66,8 +76,12 @@ namespace EscolaAPI.Controllers
 
             _context.Alunos.Remove(aluno);
             await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok(new
+            {
+                success = true,
+                message = "Aluno removido com sucesso.",
+                id = id
+            });
         }
     }
 }
