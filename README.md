@@ -44,3 +44,63 @@ INSERT INTO "Alunos" ("Nome", "Email", "Curso", "DataNascimento") VALUES
 - Certifique-se de ter PostgreSQL rodando.
 - Ajuste a conexão em `appsettings.json` caso necessário.
 - Depois de rodar o script, faça login em `POST /api/auth/login` e use o token para acessar `GET /api/alunos`.
+
+## Testes (exemplos)
+
+Antes de testar os endpoints protejidos, obtenha um token:
+
+1. Login (gera token):
+
+```bash
+curl -X POST http://localhost:5255/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"123456"}'
+```
+
+Resposta (exemplo):
+```json
+{ "token": "<seu_jwt_aqui>" }
+```
+
+Use o token nos exemplos abaixo no header `Authorization: Bearer <token>`.
+
+1) GET /api/alunos - Listar todos
+
+```bash
+curl -H "Authorization: Bearer <token>" http://localhost:5255/api/alunos
+```
+
+2) GET /api/alunos/{id} - Buscar por ID
+
+```bash
+curl -H "Authorization: Bearer <token>" http://localhost:5255/api/alunos/1
+```
+
+3) POST /api/alunos - Inserir aluno
+
+```bash
+curl -X POST http://localhost:5255/api/alunos \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -d '{"nome":"Novo Aluno","email":"novo@example.com","curso":"Engenharia","dataNascimento":"2006-05-01T00:00:00Z"}'
+```
+
+4) PUT /api/alunos/{id} - Atualizar aluno
+
+Envie somente os campos a atualizar (não é obrigatório enviar `id` no body):
+
+```bash
+curl -X PUT http://localhost:5255/api/alunos/1 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -d '{"nome":"Nome Atualizado","email":"atualizado@example.com","curso":"TI","dataNascimento":"2004-09-30T00:00:00Z"}'
+```
+
+5) DELETE /api/alunos/{id} - Remover aluno
+
+```bash
+curl -X DELETE http://localhost:5255/api/alunos/1 \
+  -H "Authorization: Bearer <token>"
+```
+
+Dica: no Insomnia/Postman use a aba `Auth` → `Bearer Token` e cole o token para facilitar os testes.
