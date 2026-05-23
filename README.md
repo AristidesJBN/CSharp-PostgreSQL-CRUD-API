@@ -11,9 +11,7 @@ Alunos:
 ## Como rodar a API
 
 1. Abra o terminal na pasta do projeto:
-   ```bash
-   cd C:\Users\anagi\Documents\Neto\Backend\EscolaAPI
-   ```
+
 2. Execute o comando:
    ```bash
    dotnet run
